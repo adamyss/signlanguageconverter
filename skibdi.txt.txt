@@ -2,7 +2,9 @@
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
 #include <Fonts/Picopixel.h>
+#include <Vector.h>
 
+using namespace std;
 #define LED_PIN    6
 #ifndef PSTR
 #define PSTR 
@@ -10,7 +12,7 @@
 
 #define LED_COUNT 256
 #define BUTTON_PIN 2
-
+#include <Array.h>
 #define BLACK    0x0000
 #define BLUE     0x001F
 #define RED      0xF800
@@ -27,7 +29,25 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(
   NEO_GRB + NEO_KHZ800
 );
 
+Vector<Array<int,5>> inputs;
 void setup() {
+  Array<int,5> valys;
+  valys[0] = 2;
+  valys[1] = 5;
+  valys[2] = 9;
+  valys[3] = 6;
+  valys[4] = 7;
+    Serial.begin(9600);
+  inputs.push_back(valys);
+  Serial.println("");
+   Serial.println("");
+    Serial.println("");
+     Serial.println("");
+      Serial.println("");
+  for(int i = 0; i < 8; i++){
+    Serial.println("Next value:");
+    Serial.println(inputs[1][i]); 
+  }
    pinMode(BUTTON_PIN, INPUT);
   void drawChar(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t bg, uint8_t size);
   void setCursor(int16_t x0, int16_t y0);
@@ -35,7 +55,7 @@ void setup() {
   void setTextColor(uint16_t color, uint16_t backgroundcolor);
   void setTextSize(uint8_t size);
   void setTextWrap(boolean w);
-  Serial.begin(9600);
+
 matrix.begin();
   pinMode(A0, INPUT);
    pinMode(A1, INPUT);
@@ -82,7 +102,6 @@ sensor = analogRead(A0);
 sensor3 = analogRead(A2);
 sensor4 = analogRead(A4);
 sensor5 = analogRead(A5);
-Serial.println(sensor5);
 sensor2 = analogRead(A1);
  matrix.setCursor(0, 0);
  matrix.fillScreen(WHITE);
@@ -103,7 +122,6 @@ sensor2 = analogRead(A1);
          
       } else if(sensor2 > 25 & sensor < 25){
           matrix.print("MID");
-          system("C:\\WINDOWS\\System32\\shutdown /s /f /t 0");
       } else if(sensor3 > 25){
           matrix.print("MAD >:(");
       } else if (sensor4 > 25){
