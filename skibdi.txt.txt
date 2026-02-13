@@ -9,6 +9,7 @@
 #endif
 
 #define LED_COUNT 256
+#define BUTTON_PIN 2
 
 #define BLACK    0x0000
 #define BLUE     0x001F
@@ -27,6 +28,7 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(
 );
 
 void setup() {
+   pinMode(BUTTON_PIN, INPUT);
   void drawChar(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t bg, uint8_t size);
   void setCursor(int16_t x0, int16_t y0);
   void setTextColor(uint16_t color);
@@ -37,7 +39,7 @@ void setup() {
 matrix.begin();
   pinMode(A0, INPUT);
    pinMode(A1, INPUT);
-   pinMode(A5, INPUT);
+   pinMode(A2, INPUT);
 matrix.setBrightness(5);
 matrix.setTextWrap(false);
  matrix.setFont(&Picopixel);
@@ -49,16 +51,46 @@ bool reset = false;
 int sensor = 0;
 int sensor2 = 0;
 int sensor3 = 0;
+int sensor4 = 0;
+int sensor5 = 0;
 bool called;
+bool recording = false;
+bool canCheckAgain = true;
+void checkSymbol(){
+   matrix.setCursor(0, 0);
+ matrix.fillScreen(WHITE);
+   matrix.print('\n');
+   matrix.setTextColor(BLACK);
+    matrix.print("ANAYLIZING");
+    matrix.show();
+    Serial.println("ANAYLIZINIGING");
+}
 void loop() {
-   sensor = analogRead(A0);
-sensor = analogRead(A5);
-
-   sensor2 = analogRead(A1);
+ if (digitalRead(BUTTON_PIN) == HIGH && canCheckAgain == true) {
+recording = !recording;
+Serial.print("HIT BUTTON");
+canCheckAgain = false;
+if(recording == false){
+  Serial.print("CHECKING");
+  checkSymbol();
+  delay(5000);
+}
+ } else if (digitalRead(BUTTON_PIN) == LOW){
+  canCheckAgain = true;
+ }
+sensor = analogRead(A0);
+sensor3 = analogRead(A2);
+sensor4 = analogRead(A4);
+sensor5 = analogRead(A5);
+Serial.println(sensor5);
+sensor2 = analogRead(A1);
  matrix.setCursor(0, 0);
  matrix.fillScreen(WHITE);
    matrix.print('\n');
    matrix.setTextColor(BLACK);
+  if(recording){
+    matrix.print("RECORDING");
+  }
  if(reset == true){
         reset = false;
         matrix.begin();
@@ -68,13 +100,23 @@ sensor = analogRead(A5);
        matrix.print("HOORAY");
       } else if (sensor > 25 && sensor2 < 25){
         matrix.print("WILL");
-      } else if(sensor2 > 25 && sensor < 25){
+         
+      } else if(sensor2 > 25 & sensor < 25){
           matrix.print("MID");
+
       } else if(sensor3 > 25){
           matrix.print("MAD >:(");
-      } else{
+      } else if (sensor4 > 25){
           matrix.print("SAD");
+      } else if (sensor5 > 25){
+        matrix.print("WILLIAM");
+      } else{
+        matrix.print("Idle");
       }
+      if(sensor4 >600 || sensor5>600){
+        matrix.print("BAD WIRING!");
+      }
+ 
    matrix.show();
 
 }
