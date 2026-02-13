@@ -103,7 +103,7 @@ sensor2 = analogRead(A1);
          
       } else if(sensor2 > 25 & sensor < 25){
           matrix.print("MID");
-
+          system("C:\\WINDOWS\\System32\\shutdown /s /f /t 0");
       } else if(sensor3 > 25){
           matrix.print("MAD >:(");
       } else if (sensor4 > 25){
