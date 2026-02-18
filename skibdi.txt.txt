@@ -9,10 +9,9 @@ using namespace std;
 #ifndef PSTR
 #define PSTR 
 #endif
-
+typedef Vector<int> matrixy;
 #define LED_COUNT 256
 #define BUTTON_PIN 2
-#include <Array.h>
 #define BLACK    0x0000
 #define BLUE     0x001F
 #define RED      0xF800
@@ -21,33 +20,28 @@ using namespace std;
 #define MAGENTA  0xF81F
 #define YELLOW   0xFFE0 
 #define WHITE    0xFFFF
-
+int correspondingAmounts[5] = {0,0,0,0,0};
+String words[3] = {"shooting","chill","Nu uh"};
+int fun[3][5] ={
+  {30,20,350,195,1},
+  {-50,-50,-50,-50,-50},
+  {50,0,250,100,43}
+};
 Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(
   32, 8, LED_PIN,
   NEO_MATRIX_TOP + NEO_MATRIX_LEFT +
   NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
   NEO_GRB + NEO_KHZ800
 );
-
-Vector<Array<int,5>> inputs;
+matrixy vect;
 void setup() {
-  Array<int,5> valys;
-  valys[0] = 2;
-  valys[1] = 5;
-  valys[2] = 9;
-  valys[3] = 6;
-  valys[4] = 7;
     Serial.begin(9600);
-  inputs.push_back(valys);
   Serial.println("");
    Serial.println("");
     Serial.println("");
      Serial.println("");
       Serial.println("");
-  for(int i = 0; i < 8; i++){
-    Serial.println("Next value:");
-    Serial.println(inputs[1][i]); 
-  }
+
    pinMode(BUTTON_PIN, INPUT);
   void drawChar(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t bg, uint8_t size);
   void setCursor(int16_t x0, int16_t y0);
@@ -55,7 +49,8 @@ void setup() {
   void setTextColor(uint16_t color, uint16_t backgroundcolor);
   void setTextSize(uint8_t size);
   void setTextWrap(boolean w);
-
+int testy[50];
+  vect.setStorage(testy);
 matrix.begin();
   pinMode(A0, INPUT);
    pinMode(A1, INPUT);
@@ -76,6 +71,9 @@ int sensor5 = 0;
 bool called;
 bool recording = false;
 bool canCheckAgain = true;
+int counter = 0;
+
+
 void checkSymbol(){
    matrix.setCursor(0, 0);
  matrix.fillScreen(WHITE);
@@ -83,18 +81,31 @@ void checkSymbol(){
    matrix.setTextColor(BLACK);
     matrix.print("ANAYLIZING");
     matrix.show();
-    Serial.println("ANAYLIZINIGING");
+    for(int i = 0; i < counter; i++){
+      Serial.print("finger: ");
+      Serial.print((i%5)+1);
+      Serial.print("  ");
+      Serial.println(vect[i]);
+    }
+    int testy[50];
+    vect.setStorage(testy);
 }
+
 void loop() {
+  
+  
  if (digitalRead(BUTTON_PIN) == HIGH && canCheckAgain == true) {
-recording = !recording;
-Serial.print("HIT BUTTON");
-canCheckAgain = false;
-if(recording == false){
-  Serial.print("CHECKING");
-  checkSymbol();
-  delay(5000);
+  Serial.println("");
+   Serial.println("");
+    Serial.println("");
+     Serial.println("");
+      Serial.println("");
+  for (int i = 0; i < 5; i++){
+    Serial.print(i+1);
+    Serial.print(" :");
+  Serial.println(correspondingAmounts[i]);
 }
+canCheckAgain = false;
  } else if (digitalRead(BUTTON_PIN) == LOW){
   canCheckAgain = true;
  }
@@ -103,37 +114,41 @@ sensor3 = analogRead(A2);
 sensor4 = analogRead(A4);
 sensor5 = analogRead(A5);
 sensor2 = analogRead(A1);
+
  matrix.setCursor(0, 0);
  matrix.fillScreen(WHITE);
    matrix.print('\n');
    matrix.setTextColor(BLACK);
-  if(recording){
-    matrix.print("RECORDING");
-  }
  if(reset == true){
         reset = false;
         matrix.begin();
         Serial.print("no Screen\n");
       }
-     if(sensor > 25 && sensor2 > 25){
-       matrix.print("HOORAY");
-      } else if (sensor > 25 && sensor2 < 25){
-        matrix.print("WILL");
-         
-      } else if(sensor2 > 25 & sensor < 25){
-          matrix.print("MID");
-      } else if(sensor3 > 25){
-          matrix.print("MAD >:(");
-      } else if (sensor4 > 25){
-          matrix.print("SAD");
-      } else if (sensor5 > 25){
-        matrix.print("WILLIAM");
-      } else{
-        matrix.print("Idle");
-      }
-      if(sensor4 >600 || sensor5>600){
-        matrix.print("BAD WIRING!");
-      }
+  correspondingAmounts[0] = sensor;
+  correspondingAmounts[1] = sensor2;
+  correspondingAmounts[2] = sensor3;
+  correspondingAmounts[4] = sensor5;
+  correspondingAmounts[3] = sensor4;
+
+bool none = true;
+for (int a = 0; a < 2; a++){
+  bool good = true;
+for (int i = 0; i < 5; i++){
+  int amount = correspondingAmounts[i];
+if(amount < fun[a][i] - 115 || amount > fun[a][i] + 115){
+  good = false;
+}
+
+}
+if(good == true){
+  none = false;
+  matrix.print(words[a]);
+}
+}
+if(none == true){
+  matrix.print("none");
+}
+
  
    matrix.show();
 
