@@ -3,7 +3,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <Fonts/Picopixel.h>
 #include <Vector.h>
-
+// declaring stuffs
 using namespace std;
 #define LED_PIN    6
 #ifndef PSTR
@@ -12,6 +12,7 @@ using namespace std;
 typedef Vector<int> matrixy;
 #define LED_COUNT 256
 #define BUTTON_PIN 2
+// colors for the led board
 #define BLACK    0x0000
 #define BLUE     0x001F
 #define RED      0xF800
@@ -28,6 +29,7 @@ int fun[4][5] ={
   {0,0,0,0,0},
   {0,0,1,0,0}
 };
+// setting up neomatrix
 Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(
   32, 8, LED_PIN,
   NEO_MATRIX_TOP + NEO_MATRIX_LEFT +
@@ -35,6 +37,7 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(
   NEO_GRB + NEO_KHZ800
 );
 matrixy vect;
+// set ups stuffs
 void setup() {
     Serial.begin(9600);
   Serial.println("");
@@ -74,7 +77,7 @@ bool recording = false;
 bool canCheckAgain = true;
 int counter = 0;
 
-
+/*
 void checkSymbol(){
    matrix.setCursor(0, 0);
  matrix.fillScreen(WHITE);
@@ -91,10 +94,10 @@ void checkSymbol(){
     int testy[50];
     vect.setStorage(testy);
 }
-
+*/
 void loop() {
   
-  
+  // checking if debugging button is pressed 
  if (digitalRead(BUTTON_PIN) == HIGH && canCheckAgain == true) {
   Serial.println("");
    Serial.println("");
@@ -112,6 +115,7 @@ canCheckAgain = false;
  } else if (digitalRead(BUTTON_PIN) == LOW){
   canCheckAgain = true;
  }
+// reading sensor value for each finger
 sensor = analogRead(A0);
 sensor3 = analogRead(A2);
 sensor4 = analogRead(A4);
@@ -134,6 +138,7 @@ sensor2 = analogRead(A1);
   correspondingAmounts[3] = sensor4;
 
 bool none = true;
+// getting what symbol is being made in hand
 for (int a = 0; a < 4; a++){
   bool good = true;
 for (int i = 0; i < 5; i++){
@@ -163,6 +168,7 @@ if(good == true){
   matrix.print(words[a]);
 }
 }
+// print none if there is no symbol
 if(none == true){
   matrix.print("none");
 }
@@ -171,3 +177,4 @@ if(none == true){
    matrix.show();
 
 }
+
