@@ -1,3 +1,9 @@
+/*
+Will Holley :D & Adam Ruzicka
+2/4/2025
+Software Design
+Signwave
+*/
 #include <Adafruit_GFX.h>
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
@@ -21,7 +27,9 @@ typedef Vector<int> matrixy;
 #define MAGENTA  0xF81F
 #define YELLOW   0xFFE0 
 #define WHITE    0xFFFF
+//aray to store each finger input
 int correspondingAmounts[5] = {0,0,0,0,0};
+//arrays to match a group of inputs to a word
 String words[4] = {"shooting","peace","Nu uh","RUDE"};
 int fun[4][5] ={
   {1,1,0,0,0},
@@ -47,6 +55,7 @@ void setup() {
       Serial.println("");
 
    pinMode(BUTTON_PIN, INPUT);
+// functions for neo matrix
   void drawChar(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t bg, uint8_t size);
   void setCursor(int16_t x0, int16_t y0);
   void setTextColor(uint16_t color);
@@ -59,6 +68,7 @@ matrix.begin();
   pinMode(A0, INPUT);
    pinMode(A1, INPUT);
    pinMode(A2, INPUT);
+// setting up basic neo matrix values
 matrix.setBrightness(5);
 matrix.setTextWrap(false);
  matrix.setFont(&Picopixel);
@@ -76,7 +86,7 @@ bool called;
 bool recording = false;
 bool canCheckAgain = true;
 int counter = 0;
-
+// basically removed but might be adapted in the future
 /*
 void checkSymbol(){
    matrix.setCursor(0, 0);
@@ -177,4 +187,5 @@ if(none == true){
    matrix.show();
 
 }
+
 
